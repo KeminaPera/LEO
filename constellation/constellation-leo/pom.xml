@@ -6,7 +6,6 @@
         <groupId>com.keminapera.constellation</groupId>
         <artifactId>constellation-version</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../../constellation-version/pom.xml</relativePath>
     </parent>
 
     <artifactId>constellation-leo</artifactId>
