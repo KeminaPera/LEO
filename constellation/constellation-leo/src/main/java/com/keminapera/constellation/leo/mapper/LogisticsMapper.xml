@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keminapera.constellation.leo.mapper.LogisticsMapper">
+
+    <resultMap id="BaseResultMap" type="com.keminapera.constellation.leo.pojo.Logistics">
+        <result column="c_number" jdbcType="VARCHAR" property="number" />
+        <result column="n_company" jdbcType="INTEGER" property="company" />
+        <result column="dt_send_time" jdbcType="TIMESTAMP" property="sendTime" />
+        <result column="c_latest_progress" jdbcType="VARCHAR" property="latestProgress" />
+        <result column="n_state" jdbcType="INTEGER" property="state" />
+        <result column="c_addressee" jdbcType="VARCHAR" property="addressee" />
+        <result column="c_addressee_phone" jdbcType="VARCHAR" property="addresseePhone" />
+        <result column="c_addressee_address" jdbcType="VARCHAR" property="addresseeAddress" />
+        <result column="dt_latest_time" jdbcType="TIMESTAMP" property="latestTime" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.keminapera.constellation.leo.pojo.Logistics">
+        insert into t_logistics(c_number, n_company, dt_send_time, c_latest_progress,
+        n_state, c_addressee, c_addressee_phone, c_addressee_address, dt_latest_time)
+        values (#{number}, #{company}, #{sendTime}, #{latestProgress},
+        #{state}, #{addressee}, #{addresseePhone}, #{addresseeAddress}, #{latestTime})
+    </insert>
+
+    <select id="selectByNumAndCom" resultMap="BaseResultMap">
+        select * from t_logistics where c_number = #{number} and n_company = #{company}
+    </select>
+
+    <update id="update">
+        update t_logistics set (dt_latest_time = #{latestTime}, c_latest_progress = #{latestProgress}) where c_number = #{number}
+    </update>
+</mapper>

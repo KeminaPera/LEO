@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keminapera.constellation.leo.mapper.LogisticsInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.keminapera.constellation.leo.pojo.LogisticsInfo">
+        <result column="c_id" jdbcType="VARCHAR" property="id" />
+        <result column="dt_time" jdbcType="TIMESTAMP" property="time" />
+        <result column="c_desc" jdbcType="VARCHAR" property="desc" />
+        <result column="c_number_logistics" jdbcType="VARCHAR" property="numberLogistics" />
+    </resultMap>
+
+    <insert id="insert" parameterType="com.keminapera.constellation.leo.pojo.LogisticsInfo">
+        insert into t_logistics_info(c_id, dt_time, c_desc, c_number_logistics)
+        values (#{id}, #{time}, #{desc}, #{numberLogistics})
+    </insert>
+    <insert id="insertBatch">
+
+    </insert>
+    <select id="Sel" resultType="com.keminapera.constellation.leo.pojo.LogisticsInfo">
+        select * from t_logistics_info where id = #{id}
+    </select>
+    <select id="selectByNum" resultMap="BaseResultMap" parameterType="string">
+        select * from t_logistics_info where c_number_logistics = #{number} order by dt_time desc;
+    </select>
+</mapper>

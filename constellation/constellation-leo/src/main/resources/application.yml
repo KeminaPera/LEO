@@ -1,0 +1,11 @@
+# 数据源配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/leo?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+kuaidi100:
+  url: https://www.kuaidi100.com/query
+zhongtong:
+  url: https://hdgateway.zto.com/WayBill_GetDetail
