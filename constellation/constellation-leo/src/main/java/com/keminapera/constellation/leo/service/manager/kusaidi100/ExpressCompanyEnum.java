@@ -1,5 +1,6 @@
-package com.keminapera.constellation.leo.comon;
+package com.keminapera.constellation.leo.service.manager.kusaidi100;
 
+import com.keminapera.constellation.leo.comon.CommonProperties;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 

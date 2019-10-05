@@ -6,6 +6,7 @@ import com.keminapera.constellation.leo.pojo.Logistics;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.ExpressCompanySelector;
 import com.keminapera.constellation.leo.service.manager.IExpressCompany;
+import com.keminapera.constellation.leo.service.manager.IWebSite;
 import com.keminapera.constellation.leo.service.storage.LogisticsInfoStorage;
 import com.keminapera.constellation.leo.service.storage.LogisticsStorage;
 import org.springframework.stereotype.Service;
@@ -46,19 +47,19 @@ public class LogisticsService {
         IExpressCompany expressCompany = expressCompanySelector.select(company);
         //该系统还没有该快递物流的信息
         if (localLogistics == null) {
-            LogisticsVo aLogisticsVo = expressCompany.queryLogistics(number);
+            LogisticsVo aLogisticsVo = expressCompany instanceof IWebSite ? ((IWebSite) expressCompany).queryLogistics(number, company) : expressCompany.queryLogistics(number);
             logisticsStorage.insert(aLogisticsVo.getLogistics());
             logisticsInfoStorage.insertBatch(aLogisticsVo.getLogisticsInfoList());
             return aLogisticsVo;
-        }
-        //现在本地查询，如果已完成，直接返回结果
-        if (localLogistics.getState() == LogisticsStateEnum.FINISHED.getState()) {
+        } else if (localLogistics.getState() == LogisticsStateEnum.FINISHED.getState()) {
+            //先在本地查询，如果已完成，直接返回结果
             logisticsVo.setLogistics(localLogistics);
             List<LogisticsInfo> logisticsInfoList = logisticsInfoStorage.getLogisticsInfo(number);
             Optional.ofNullable(logisticsInfoList).ifPresent(logisticsVo::setLogisticsInfoList);
             return logisticsVo;
         }
-        List<LogisticsInfo> logisticsInfoList = expressCompany.queryLogisticsInfoList(number);
+        //本地系统已有该快递物流信息且还没有完成，对比是否物流信息已更新
+        List<LogisticsInfo> logisticsInfoList = expressCompany instanceof IWebSite ? ((IWebSite) expressCompany).queryLogisticsInfoList(number, company) : expressCompany.queryLogisticsInfoList(number);
         Date latestTime = localLogistics.getLatestTime();
         List<LogisticsInfo> insertList = new ArrayList<>(16);
         LogisticsInfo latestLogisticsInfo = null;

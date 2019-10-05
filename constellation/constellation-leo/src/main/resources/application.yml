@@ -6,6 +6,8 @@ spring:
     password: 123456
     url: jdbc:mysql://localhost:3306/leo?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
 kuaidi100:
-  url: https://www.kuaidi100.com/query
+  url: https://sp0.baidu.com/9_Q4sjW91Qh3otqbppnN2DJv/pae/channel/data/asyncqury
+  cb: jQuery110206239658217067707_1570247589740
+  appid: 4001
 zhongtong:
   url: https://hdgateway.zto.com/WayBill_GetDetail

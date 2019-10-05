@@ -4,7 +4,7 @@ import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;
 import com.keminapera.constellation.leo.util.HttpUtil;
-import com.keminapera.constellation.leo.util.RequestParamBuilder;
+import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -24,21 +24,22 @@ public class ZhongTongExpressCompany extends AbstractExpressCompany implements I
     /**
      * 物流信息提取器
      */
-    private LogisticsInfoExtractor logisticsInfoExtractor;
-    public ZhongTongExpressCompany(LogisticsInfoExtractor logisticsInfoExtractor) {
-        this.logisticsInfoExtractor = logisticsInfoExtractor;
+    private ZhongTongLogisticsInfoLogisticsInfoExtractor zhongTongLogisticsInfoExtractor;
+
+    public ZhongTongExpressCompany(ZhongTongLogisticsInfoLogisticsInfoExtractor zhongTongLogisticsInfoExtractor) {
+        this.zhongTongLogisticsInfoExtractor = zhongTongLogisticsInfoExtractor;
     }
     @Override
     public LogisticsVo queryLogistics(String number) {
-        Map<String, String> requestParam = RequestParamBuilder.builder("billCode", number);
+        Map<String, String> requestParam = RequestParamBuilderUtil.builder("billCode", number);
         String result = HttpUtil.sendPost(url, requestParam);
-        return logisticsInfoExtractor.doExtractorLogistics(result);
+        return zhongTongLogisticsInfoExtractor.doExtractorLogistics(result);
     }
 
     @Override
     public List<LogisticsInfo> queryLogisticsInfoList(String number) {
-        Map<String, String> requestParam = RequestParamBuilder.builder("billCode", number);
+        Map<String, String> requestParam = RequestParamBuilderUtil.builder("billCode", number);
         String result = HttpUtil.sendPost(url, requestParam);
-        return logisticsInfoExtractor.doExtractorLogisticsInfoList(result);
+        return zhongTongLogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
     }
 }

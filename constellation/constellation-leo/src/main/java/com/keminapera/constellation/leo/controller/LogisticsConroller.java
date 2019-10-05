@@ -5,9 +5,9 @@ import com.keminapera.constellation.leo.service.LogisticsService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 物流信息获取controller
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author KeminaPera
  * @date 2019/10/2 10:09
  */
-@Controller
+@RestController
 @RequestMapping(value = "/logistics")
 public class LogisticsConroller {
 

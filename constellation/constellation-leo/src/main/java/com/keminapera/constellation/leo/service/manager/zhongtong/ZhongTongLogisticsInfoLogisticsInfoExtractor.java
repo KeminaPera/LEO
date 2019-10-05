@@ -3,11 +3,13 @@ package com.keminapera.constellation.leo.service.manager.zhongtong;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.keminapera.constellation.leo.comon.ExpressCompanyEnum;
+import com.keminapera.constellation.leo.comon.CompanyEnum;
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.exception.HttpException;
 import com.keminapera.constellation.leo.pojo.Logistics;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
+import com.keminapera.constellation.leo.service.manager.AbstractLogisticsInfoExtractor;
+import com.keminapera.constellation.leo.service.manager.ILogisticsInfoExtractor;
 import com.keminapera.constellation.leo.util.KeyGeneratorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -23,12 +25,13 @@ import java.util.List;
  * @date 2019/10/3 8:15
  */
 @Component
-public final class LogisticsInfoExtractor {
+public final class ZhongTongLogisticsInfoLogisticsInfoExtractor extends AbstractLogisticsInfoExtractor implements ILogisticsInfoExtractor {
     /**
      * 从数据中提取物流信息（本系统还没有该快递单号的任何信息）
      * @param data 第三方返回的结果
      * @return {@link LogisticsVo} 物流信息包装类
      */
+    @Override
     public LogisticsVo doExtractorLogistics(String data) {
         if (StringUtils.isBlank(data)) {
             throw new HttpException();
@@ -43,8 +46,8 @@ public final class LogisticsInfoExtractor {
         logistics.setState(jsonObject.getIntValue(ParseProperties.STATE));
         String number = jsonObject.getString(ParseProperties.NUMBER);
         logistics.setNumber(number);
-        logistics.setCompany(ExpressCompanyEnum.ZHONGTONG.getNumber());
-        List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(data);
+        logistics.setCompany(CompanyEnum.ZHONGTONG.getCompanyNumber());
+        List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(data, false);
         LogisticsInfo latestLogisticsInfo = logisticsInfoList.get(0);
         logistics.setLatestTime(latestLogisticsInfo.getTime());
         logistics.setLatestProgress(latestLogisticsInfo.getDesc());
@@ -59,9 +62,9 @@ public final class LogisticsInfoExtractor {
      * 提取物流信息（本系统已存在该快递信息）
      * @param data 第三方返回的结果
      * @return 物流信息列表
-     * @throws Exception
      */
-    public List<LogisticsInfo> doExtractorLogisticsInfoList(String data) {
+    @Override
+    public List<LogisticsInfo> doExtractorLogisticsInfoList(String data, boolean logisticsInfoExisted) {
         JSONObject json = JSON.parseObject(data);
         if(!json.getBooleanValue(ParseProperties.STATUS)) {
             throw new HttpException();

@@ -6,14 +6,29 @@
     <parent>
         <groupId>com.keminapera.constellation</groupId>
         <artifactId>constellation-version</artifactId>
-        <version>{project.version}</version>
+        <version>0.0.1-SNAPSHOT</version>
         <relativePath>../constellation-version/pom.xml</relativePath>
     </parent>
 
     <name>constellation-common</name>
-    <description>对整个工程所依赖的jar包版本进行管理</description>
+    <description>所有公用的utils,pojo等类由该项目管理</description>
 
     <artifactId>constellation-common</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
