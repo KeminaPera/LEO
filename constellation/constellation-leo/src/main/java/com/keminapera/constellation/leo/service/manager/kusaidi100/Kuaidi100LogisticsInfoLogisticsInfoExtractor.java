@@ -28,16 +28,10 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
     private Kuaidi100LogisticsInfoLogisticsInfoExtractor() {
     }
 
-    /**
-     * 解析出物流信息（系统已经存在该物流信息）
-     * @param result 第三方获取的结果
-     * @param logisticsInfoExisted 该物流信息在本地是否已存在
-     * @return 物流信息列表
-     */
     @Override
     @NotNull
-    public List<LogisticsInfo> doExtractorLogisticsInfoList(@NotNull String result, boolean logisticsInfoExisted) {
-        String targetResult = logisticsInfoExisted ? getTargetString(result) : result;
+    public List<LogisticsInfo> doExtractorLogisticsInfoList(@NotNull String receivedResult, boolean logisticsInfoExisted) {
+        String targetResult = logisticsInfoExisted ? getTargetString(receivedResult) : receivedResult;
         List<LogisticsInfo> logisticsInfoList = new ArrayList<>(16);
         JSONObject jsonObject = JSON.parseObject(targetResult);
         JSONArray jsonarray = jsonObject.getJSONArray(ParseProperties.DATA);
@@ -54,14 +48,9 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
         return logisticsInfoList;
     }
 
-    /**
-     * 解析物流信息（本系统还未有快递任何信息）
-     * @param result 第三方获取的结果
-     * @return 物流信息
-     */
     @Override
-    public LogisticsVo doExtractorLogistics(@NotNull String result) {
-        String targetResult = getTargetString(result);
+    public LogisticsVo doExtractorLogistics(@NotNull String receivedResult) {
+        String targetResult = getTargetString(receivedResult);
         LogisticsVo logisticsVo = new LogisticsVo();
         Logistics logistics = new Logistics();
         JSONObject jsonObject = JSON.parseObject(targetResult);
@@ -72,6 +61,12 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
         List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(targetResult, false);
         logisticsVo.setLogisticsInfoList(logisticsInfoList);
         return logisticsVo;
+    }
+
+    @Override
+    public JSONObject getSuccessData(String receivedResult) {
+        String targetString = getTargetString(receivedResult);
+        return null;
     }
 
     /**

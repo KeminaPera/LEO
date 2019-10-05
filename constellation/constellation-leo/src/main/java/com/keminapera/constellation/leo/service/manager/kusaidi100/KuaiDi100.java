@@ -2,11 +2,12 @@ package com.keminapera.constellation.leo.service.manager.kusaidi100;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
-import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;
+import com.keminapera.constellation.leo.service.manager.AbstractWebSite;
 import com.keminapera.constellation.leo.util.EnCodingAndDecodingUtil;
 import com.keminapera.constellation.leo.util.HttpUtil;
 import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +23,7 @@ import java.util.Map;
  */
 @Slf4j
 @Component
-public class KuaiDi100 extends AbstractExpressCompany implements IKuaiDi100 {
+public class KuaiDi100 extends AbstractWebSite implements IKuaiDi100 {
     @Value("${kuaidi100.url}")
     private String url;
     @Value("${kuaidi100.cb}")
@@ -40,17 +41,18 @@ public class KuaiDi100 extends AbstractExpressCompany implements IKuaiDi100 {
 
     @Override
     public List<LogisticsInfo> queryLogisticsInfoList(String number, int company) {
-        String result = buildParamAndGetResult(number, company);
+        String result = buildRequestParamAndGetResult(number, company);
         return kuaidi100LogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
     }
 
     @Override
     public LogisticsVo queryLogistics(String number, int company) {
-        String result = buildParamAndGetResult(number, company);
+        String result = buildRequestParamAndGetResult(number, company);
         return kuaidi100LogisticsInfoExtractor.doExtractorLogistics(result);
     }
 
-    private String buildParamAndGetResult(String number, int company) {
+    @Override
+    protected String buildRequestParamAndGetResult(String number, int company) {
         List<String> keyList = Arrays.asList(RequestParam.CB, RequestParam.APPID, RequestParam.COM, RequestParam.NU);
         List<String> valueList = Arrays.asList(cb, appid, ExpressCompanyEnum.getCom(company), number);
         Map<String, String> paramMap = RequestParamBuilderUtil.builder(keyList, valueList);
@@ -61,13 +63,13 @@ public class KuaiDi100 extends AbstractExpressCompany implements IKuaiDi100 {
     }
 
     @Override
-    public LogisticsVo queryLogistics(String number) {
+    public LogisticsVo queryLogistics(@NotNull String number) {
         //TODO: 识别该快递单号是哪个快递公司的
         return null;
     }
 
     @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(String number) {
+    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
         //TODO: 识别该快递单号是哪个快递公司的
         return null;
     }

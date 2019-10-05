@@ -11,3 +11,8 @@ kuaidi100:
   appid: 4001
 zhongtong:
   url: https://hdgateway.zto.com/WayBill_GetDetail
+yunda:
+  url: http://membernew.yundasys.com:15116/opserver/ydmb/interface.do
+  action: member.order.get_mail_info_batch
+  appid: ydmb
+  sort: desc

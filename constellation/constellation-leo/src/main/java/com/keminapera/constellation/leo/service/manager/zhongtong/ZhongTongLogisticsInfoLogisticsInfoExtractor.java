@@ -11,7 +11,6 @@ import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractLogisticsInfoExtractor;
 import com.keminapera.constellation.leo.service.manager.ILogisticsInfoExtractor;
 import com.keminapera.constellation.leo.util.KeyGeneratorUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,28 +25,17 @@ import java.util.List;
  */
 @Component
 public final class ZhongTongLogisticsInfoLogisticsInfoExtractor extends AbstractLogisticsInfoExtractor implements ILogisticsInfoExtractor {
-    /**
-     * 从数据中提取物流信息（本系统还没有该快递单号的任何信息）
-     * @param data 第三方返回的结果
-     * @return {@link LogisticsVo} 物流信息包装类
-     */
+
     @Override
-    public LogisticsVo doExtractorLogistics(String data) {
-        if (StringUtils.isBlank(data)) {
-            throw new HttpException();
-        }
-        JSONObject json = JSON.parseObject(data);
-        if(!json.getBooleanValue(ParseProperties.STATUS)) {
-            throw new HttpException();
-        }
+    public LogisticsVo doExtractorLogistics(String receivedResult) {
+        JSONObject successData = getSuccessData(receivedResult);
         LogisticsVo logisticsVo = new LogisticsVo();
         Logistics logistics = new Logistics();
-        JSONObject jsonObject = json.getJSONObject(ParseProperties.RESULT);
-        logistics.setState(jsonObject.getIntValue(ParseProperties.STATE));
-        String number = jsonObject.getString(ParseProperties.NUMBER);
+        logistics.setState(successData.getIntValue(ParseProperties.STATE));
+        String number = successData.getString(ParseProperties.NUMBER);
         logistics.setNumber(number);
         logistics.setCompany(CompanyEnum.ZHONGTONG.getCompanyNumber());
-        List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(data, false);
+        List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(receivedResult, false);
         LogisticsInfo latestLogisticsInfo = logisticsInfoList.get(0);
         logistics.setLatestTime(latestLogisticsInfo.getTime());
         logistics.setLatestProgress(latestLogisticsInfo.getDesc());
@@ -58,21 +46,12 @@ public final class ZhongTongLogisticsInfoLogisticsInfoExtractor extends Abstract
         return logisticsVo;
     }
 
-    /**
-     * 提取物流信息（本系统已存在该快递信息）
-     * @param data 第三方返回的结果
-     * @return 物流信息列表
-     */
     @Override
-    public List<LogisticsInfo> doExtractorLogisticsInfoList(String data, boolean logisticsInfoExisted) {
-        JSONObject json = JSON.parseObject(data);
-        if(!json.getBooleanValue(ParseProperties.STATUS)) {
-            throw new HttpException();
-        }
-        JSONObject jsonObject = json.getJSONObject(ParseProperties.RESULT);
-        String number = jsonObject.getString(ParseProperties.NUMBER);
+    public List<LogisticsInfo> doExtractorLogisticsInfoList(String receivedResult, boolean logisticsInfoExisted) {
+        JSONObject successData = getSuccessData(receivedResult);
+        String number = successData.getString(ParseProperties.NUMBER);
         List<LogisticsInfo> logisticsInfoList = new ArrayList<>(16);
-        JSONArray logisticsRecord = jsonObject.getJSONArray(ParseProperties.LOGISTICS);
+        JSONArray logisticsRecord = successData.getJSONArray(ParseProperties.LOGISTICS);
         for (int i = 0; i < logisticsRecord.size(); i++) {
             JSONArray record = logisticsRecord.getJSONArray(i);
             for (int j = 0; j < record.size(); j++) {
@@ -88,6 +67,16 @@ public final class ZhongTongLogisticsInfoLogisticsInfoExtractor extends Abstract
             }
         }
         return logisticsInfoList;
+    }
+
+    @Override
+    public JSONObject getSuccessData(String receivedResult) {
+        JSONObject json = JSON.parseObject(receivedResult);
+        if (!json.getBooleanValue(ParseProperties.STATUS)) {
+            //todo:自定义专门的异常类
+            throw new HttpException();
+        }
+        return json.getJSONObject(ParseProperties.RESULT);
     }
 
     private static class ParseProperties {

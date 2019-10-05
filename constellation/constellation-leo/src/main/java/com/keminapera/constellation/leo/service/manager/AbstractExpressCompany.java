@@ -8,4 +8,11 @@ package com.keminapera.constellation.leo.service.manager;
  */
 public abstract class AbstractExpressCompany implements IExpressCompany {
 
+    /**
+     * 构造请求的参数并发送请求获取结果
+     *
+     * @param number 快递单号
+     * @return 获取到的结果
+     */
+    protected abstract String buildRequestParamAndGetResult(String number);
 }

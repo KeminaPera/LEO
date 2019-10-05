@@ -5,6 +5,7 @@ import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;
 import com.keminapera.constellation.leo.util.HttpUtil;
 import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,16 +31,20 @@ public class ZhongTongExpressCompany extends AbstractExpressCompany implements I
         this.zhongTongLogisticsInfoExtractor = zhongTongLogisticsInfoExtractor;
     }
     @Override
-    public LogisticsVo queryLogistics(String number) {
-        Map<String, String> requestParam = RequestParamBuilderUtil.builder("billCode", number);
-        String result = HttpUtil.sendPost(url, requestParam);
+    public LogisticsVo queryLogistics(@NotNull String number) {
+        String result = buildRequestParamAndGetResult(number);
         return zhongTongLogisticsInfoExtractor.doExtractorLogistics(result);
     }
 
     @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(String number) {
-        Map<String, String> requestParam = RequestParamBuilderUtil.builder("billCode", number);
-        String result = HttpUtil.sendPost(url, requestParam);
+    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
+        String result = buildRequestParamAndGetResult(number);
         return zhongTongLogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
+    }
+
+    @Override
+    protected String buildRequestParamAndGetResult(String number) {
+        Map<String, String> requestParam = RequestParamBuilderUtil.builder("billCode", number);
+        return HttpUtil.sendPost(url, requestParam);
     }
 }

@@ -2,6 +2,7 @@ package com.keminapera.constellation.leo.service.manager.tiantian;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -13,12 +14,12 @@ import java.util.List;
  */
 public class TianTianExpressCompany implements ITianTianExpressCompany {
     @Override
-    public LogisticsVo queryLogistics(String number) {
+    public LogisticsVo queryLogistics(@NotNull String number) {
         return null;
     }
 
     @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(String number) {
+    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
         return null;
     }
 }
