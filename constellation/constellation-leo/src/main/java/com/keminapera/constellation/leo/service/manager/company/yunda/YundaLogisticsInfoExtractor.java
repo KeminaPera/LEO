@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.yunda;
+package com.keminapera.constellation.leo.service.manager.company.yunda;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -10,7 +10,7 @@ import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractLogisticsInfoExtractor;
 import com.keminapera.constellation.leo.service.manager.ContextParamProperties;
 import com.keminapera.constellation.leo.service.manager.ILogisticsInfoExtractor;
-import com.keminapera.constellation.leo.service.manager.kusaidi100.Kuaidi100LogisticsInfoLogisticsInfoExtractor;
+import com.keminapera.constellation.leo.service.manager.website.kuaidi100.Kuaidi100LogisticsInfoLogisticsInfoExtractor;
 import com.keminapera.constellation.leo.util.KeyGeneratorUtil;
 import org.springframework.stereotype.Component;
 

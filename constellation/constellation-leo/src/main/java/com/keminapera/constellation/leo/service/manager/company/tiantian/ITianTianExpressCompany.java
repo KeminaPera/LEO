@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.tiantian;
+package com.keminapera.constellation.leo.service.manager.company.tiantian;
 
 import com.keminapera.constellation.leo.service.manager.IExpressCompany;
 
@@ -8,5 +8,5 @@ import com.keminapera.constellation.leo.service.manager.IExpressCompany;
  * @author KeminaPera
  * @date 2019/10/2 8:49
  */
-public interface ITianTianExpressCompany extends IExpressCompany {
+interface ITianTianExpressCompany extends IExpressCompany {
 }

@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.tiantian;
+package com.keminapera.constellation.leo.service.manager.company.tiantian;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import org.jetbrains.annotations.NotNull;

@@ -4,9 +4,9 @@ import com.keminapera.constellation.leo.comon.LogisticsStateEnum;
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.pojo.Logistics;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
-import com.keminapera.constellation.leo.service.manager.ExpressCompanySelector;
 import com.keminapera.constellation.leo.service.manager.IExpressCompany;
-import com.keminapera.constellation.leo.service.manager.IWebSite;
+import com.keminapera.constellation.leo.service.manager.QueryLogisticsStrategy;
+import com.keminapera.constellation.leo.service.manager.website.IWebSite;
 import com.keminapera.constellation.leo.service.storage.LogisticsInfoStorage;
 import com.keminapera.constellation.leo.service.storage.LogisticsStorage;
 import org.apache.commons.collections4.CollectionUtils;
@@ -27,12 +27,12 @@ import java.util.Optional;
 public class LogisticsService {
     private LogisticsStorage logisticsStorage;
     private LogisticsInfoStorage logisticsInfoStorage;
-    private ExpressCompanySelector expressCompanySelector;
+    private QueryLogisticsStrategy queryLogisticsStrategy;
 
-    public LogisticsService(LogisticsStorage logisticsStorage, LogisticsInfoStorage logisticsInfoStorage, ExpressCompanySelector expressCompanySelector) {
+    public LogisticsService(LogisticsStorage logisticsStorage, LogisticsInfoStorage logisticsInfoStorage, QueryLogisticsStrategy queryLogisticsStrategy) {
         this.logisticsStorage = logisticsStorage;
         this.logisticsInfoStorage = logisticsInfoStorage;
-        this.expressCompanySelector = expressCompanySelector;
+        this.queryLogisticsStrategy = queryLogisticsStrategy;
     }
 
     /**
@@ -45,7 +45,7 @@ public class LogisticsService {
     public LogisticsVo query(String number, int company){
         LogisticsVo logisticsVo = new LogisticsVo();
         Logistics localLogistics = logisticsStorage.getLogisticsByNumAndCom(number, company);
-        IExpressCompany expressCompany = expressCompanySelector.select(company);
+        IExpressCompany expressCompany = queryLogisticsStrategy.getLogisticsByDefaultStrategy(company);
         //该系统还没有该快递物流的信息
         if (localLogistics == null) {
             LogisticsVo aLogisticsVo = expressCompany instanceof IWebSite ? ((IWebSite) expressCompany).queryLogistics(number, company) : expressCompany.queryLogistics(number);

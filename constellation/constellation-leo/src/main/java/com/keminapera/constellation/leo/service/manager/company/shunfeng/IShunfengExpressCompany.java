@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.shunfeng;
+package com.keminapera.constellation.leo.service.manager.company.shunfeng;
 
 import com.keminapera.constellation.leo.service.manager.IExpressCompany;
 

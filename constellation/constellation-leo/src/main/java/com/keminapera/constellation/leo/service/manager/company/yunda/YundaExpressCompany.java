@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.yunda;
+package com.keminapera.constellation.leo.service.manager.company.yunda;
 
 import com.alibaba.fastjson.JSON;
 import com.keminapera.constellation.leo.entity.LogisticsVo;

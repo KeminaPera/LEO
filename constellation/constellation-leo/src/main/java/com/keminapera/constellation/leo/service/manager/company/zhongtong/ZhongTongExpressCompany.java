@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.zhongtong;
+package com.keminapera.constellation.leo.service.manager.company.zhongtong;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
 import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;

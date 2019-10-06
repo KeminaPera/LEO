@@ -1,9 +1,10 @@
-package com.keminapera.constellation.leo.service.manager;
+package com.keminapera.constellation.leo.service.manager.company;
 
-import com.keminapera.constellation.leo.service.manager.kusaidi100.IKuaiDi100;
-import com.keminapera.constellation.leo.service.manager.shunfeng.IShunfengExpressCompany;
-import com.keminapera.constellation.leo.service.manager.yunda.IYundaExpressCompany;
-import com.keminapera.constellation.leo.service.manager.zhongtong.IZhongTongExpressCompany;
+import com.keminapera.constellation.leo.service.manager.IExpressCompany;
+import com.keminapera.constellation.leo.service.manager.company.shunfeng.IShunfengExpressCompany;
+import com.keminapera.constellation.leo.service.manager.company.yunda.IYundaExpressCompany;
+import com.keminapera.constellation.leo.service.manager.company.zhongtong.IZhongTongExpressCompany;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,14 @@ public class ExpressCompanySelector {
     private IZhongTongExpressCompany zhongTongExpressCompany;
     @Autowired
     private IShunfengExpressCompany shunfengExpressCompany;
-    @Autowired
-    private IKuaiDi100 kuaiDi100;
 
+    /**
+     * 快递公司
+     *
+     * @param company 快递公司号
+     * @return 对应快递公司实体
+     */
+    @Nullable
     public IExpressCompany select(int company) {
         switch (company) {
             case 1:
@@ -33,7 +39,7 @@ public class ExpressCompanySelector {
             case 6:
                 return shunfengExpressCompany;
             default:
-                return kuaiDi100;
+                return null;
         }
     }
 }

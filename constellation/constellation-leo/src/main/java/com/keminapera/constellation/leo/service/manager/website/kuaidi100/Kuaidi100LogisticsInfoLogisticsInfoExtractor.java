@@ -1,4 +1,4 @@
-package com.keminapera.constellation.leo.service.manager.kusaidi100;
+package com.keminapera.constellation.leo.service.manager.website.kuaidi100;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

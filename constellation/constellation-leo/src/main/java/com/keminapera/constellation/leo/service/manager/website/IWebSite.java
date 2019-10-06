@@ -1,6 +1,7 @@
-package com.keminapera.constellation.leo.service.manager;
+package com.keminapera.constellation.leo.service.manager.website;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
+import com.keminapera.constellation.leo.service.manager.IExpressCompany;
 
 /**
  * 综合查询物流信息的网站

@@ -1,7 +1,7 @@
-package com.keminapera.constellation.leo.service.manager.kusaidi100;
+package com.keminapera.constellation.leo.service.manager.website.kuaidi100;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
-import com.keminapera.constellation.leo.service.manager.AbstractWebSite;
+import com.keminapera.constellation.leo.service.manager.website.AbstractWebSite;
 import com.keminapera.constellation.leo.util.EnCodingAndDecodingUtil;
 import com.keminapera.constellation.leo.util.HttpUtil;
 import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;

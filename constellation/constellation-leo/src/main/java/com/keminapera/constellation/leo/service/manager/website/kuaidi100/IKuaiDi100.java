@@ -1,6 +1,6 @@
-package com.keminapera.constellation.leo.service.manager.kusaidi100;
+package com.keminapera.constellation.leo.service.manager.website.kuaidi100;
 
-import com.keminapera.constellation.leo.service.manager.IWebSite;
+import com.keminapera.constellation.leo.service.manager.website.IWebSite;
 import org.springframework.stereotype.Component;
 
 /**
