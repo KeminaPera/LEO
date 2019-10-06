@@ -1,13 +1,10 @@
 package com.keminapera.constellation.leo.service.storage;
 
 import com.keminapera.constellation.leo.pojo.Logistics;
-import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.storage.cache.LogisticsCache;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * 物流存储类
@@ -47,11 +44,9 @@ public class LogisticsStorage {
 
     /**
      * 更新物流的最新进展状况和时间
-     * @param number 快递单号
-     * @param time 最新时间
-     * @param desc 最新进展
+     * @param logistics 物流实体对象
      */
-    public void update(String number, Date time, String desc) {
-        logisticsCache.update(number,time, desc);
+    public void updateLogisticsStateInfo(Logistics logistics) {
+        logisticsCache.updateLogisticsStateInfo(logistics);
     }
 }

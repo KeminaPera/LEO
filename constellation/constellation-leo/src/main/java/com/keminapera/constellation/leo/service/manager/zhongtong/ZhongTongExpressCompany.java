@@ -1,7 +1,6 @@
 package com.keminapera.constellation.leo.service.manager.zhongtong;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
-import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;
 import com.keminapera.constellation.leo.util.HttpUtil;
 import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -34,12 +32,6 @@ public class ZhongTongExpressCompany extends AbstractExpressCompany implements I
     public LogisticsVo queryLogistics(@NotNull String number) {
         String result = buildRequestParamAndGetResult(number);
         return zhongTongLogisticsInfoExtractor.doExtractorLogistics(result);
-    }
-
-    @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
-        String result = buildRequestParamAndGetResult(number);
-        return zhongTongLogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
     }
 
     @Override

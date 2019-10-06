@@ -25,7 +25,7 @@
         select * from t_logistics where c_number = #{number} and n_company = #{company}
     </select>
 
-    <update id="update">
-        update t_logistics set (dt_latest_time = #{latestTime}, c_latest_progress = #{latestProgress}) where c_number = #{number}
+    <update id="updateLogisticsStateInfo">
+        update t_logistics set (dt_latest_time = #{latestTime}, c_latest_progress = #{latestProgress}, n_state = #{state}) where c_number = #{number}
     </update>
 </mapper>

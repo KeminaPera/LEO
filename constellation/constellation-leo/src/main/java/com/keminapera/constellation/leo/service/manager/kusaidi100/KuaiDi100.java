@@ -1,7 +1,6 @@
 package com.keminapera.constellation.leo.service.manager.kusaidi100;
 
 import com.keminapera.constellation.leo.entity.LogisticsVo;
-import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractWebSite;
 import com.keminapera.constellation.leo.util.EnCodingAndDecodingUtil;
 import com.keminapera.constellation.leo.util.HttpUtil;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,15 +40,11 @@ public class KuaiDi100 extends AbstractWebSite implements IKuaiDi100 {
     }
 
     @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(String number, int company) {
-        String result = buildRequestParamAndGetResult(number, company);
-        return kuaidi100LogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
-    }
-
-    @Override
     public LogisticsVo queryLogistics(String number, int company) {
         String result = buildRequestParamAndGetResult(number, company);
-        return kuaidi100LogisticsInfoExtractor.doExtractorLogistics(result);
+        Map<String, Object> contextParam = new HashMap<>(16);
+        contextParam.put("number", number);
+        return kuaidi100LogisticsInfoExtractor.doExtractorLogistics(result, contextParam);
     }
 
     @Override
@@ -64,12 +60,6 @@ public class KuaiDi100 extends AbstractWebSite implements IKuaiDi100 {
 
     @Override
     public LogisticsVo queryLogistics(@NotNull String number) {
-        //TODO: 识别该快递单号是哪个快递公司的
-        return null;
-    }
-
-    @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
         //TODO: 识别该快递单号是哪个快递公司的
         return null;
     }

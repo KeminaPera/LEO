@@ -2,32 +2,40 @@ package com.keminapera.constellation.leo.comon;
 
 import lombok.Getter;
 /**
- * 物流状态枚举类
+ * 本系统物流状态枚举类
  *
  * @author KeminaPera
  * @date 2019/10/2 8:09
  */
 public enum LogisticsStateEnum {
     /**
-     * 已下单
+     * 未知状态
      */
-    ODERED(1, "已下单"),
+    UNKNOW(0, "疑难状态"),
     /**
-     * 仓库处理中
+     * 已邮出
      */
-    PROCESSING(2, "仓库处理中"),
+    ACCEPTED(1, "已邮出"),
     /**
      * 运输中
      */
-    TRANSITING(3, "运输中"),
+    TRANSITING(2, "运输中"),
     /**
      * 派送中
      */
-    DELIVERING(4, "派送中"),
+    DELIVERING(3, "派送中"),
+    /**
+     * 被拒签
+     */
+    REFUSED(4, "被拒签"),
     /**
      * 已完成
      */
-    FINISHED(5, "已完成");
+    FINISHED(5, "已签收"),
+    /**
+     * 退回状态
+     */
+    BACKING(6, "回退中");
     /**
      * 物流状态
      */

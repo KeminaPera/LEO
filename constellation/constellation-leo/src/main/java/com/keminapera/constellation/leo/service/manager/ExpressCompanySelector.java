@@ -1,6 +1,7 @@
 package com.keminapera.constellation.leo.service.manager;
 
 import com.keminapera.constellation.leo.service.manager.kusaidi100.IKuaiDi100;
+import com.keminapera.constellation.leo.service.manager.shunfeng.IShunfengExpressCompany;
 import com.keminapera.constellation.leo.service.manager.yunda.IYundaExpressCompany;
 import com.keminapera.constellation.leo.service.manager.zhongtong.IZhongTongExpressCompany;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ExpressCompanySelector {
     @Autowired
     private IZhongTongExpressCompany zhongTongExpressCompany;
     @Autowired
+    private IShunfengExpressCompany shunfengExpressCompany;
+    @Autowired
     private IKuaiDi100 kuaiDi100;
 
     public IExpressCompany select(int company) {
@@ -27,6 +30,8 @@ public class ExpressCompanySelector {
                 return yundaExpressCompany;
             case 4:
                 return zhongTongExpressCompany;
+            case 6:
+                return shunfengExpressCompany;
             default:
                 return kuaiDi100;
         }

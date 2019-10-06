@@ -2,7 +2,6 @@ package com.keminapera.constellation.leo.service.manager.yunda;
 
 import com.alibaba.fastjson.JSON;
 import com.keminapera.constellation.leo.entity.LogisticsVo;
-import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractExpressCompany;
 import com.keminapera.constellation.leo.util.HttpUtil;
 import com.keminapera.constellation.leo.util.RequestParamBuilderUtil;
@@ -51,12 +50,6 @@ public class YundaExpressCompany extends AbstractExpressCompany implements IYund
     public LogisticsVo queryLogistics(@NotNull String number) {
         String result = buildRequestParamAndGetResult(number);
         return yundaLogisticsInfoExtractor.doExtractorLogistics(result);
-    }
-
-    @Override
-    public List<LogisticsInfo> queryLogisticsInfoList(@NotNull String number) {
-        String result = buildRequestParamAndGetResult(number);
-        return yundaLogisticsInfoExtractor.doExtractorLogisticsInfoList(result, true);
     }
 
     @Override

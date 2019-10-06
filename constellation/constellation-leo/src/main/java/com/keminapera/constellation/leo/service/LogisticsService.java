@@ -9,6 +9,7 @@ import com.keminapera.constellation.leo.service.manager.IExpressCompany;
 import com.keminapera.constellation.leo.service.manager.IWebSite;
 import com.keminapera.constellation.leo.service.storage.LogisticsInfoStorage;
 import com.keminapera.constellation.leo.service.storage.LogisticsStorage;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -59,30 +60,37 @@ public class LogisticsService {
             return logisticsVo;
         }
         //本地系统已有该快递物流信息且还没有完成，对比是否物流信息已更新
-        List<LogisticsInfo> logisticsInfoList = expressCompany instanceof IWebSite ? ((IWebSite) expressCompany).queryLogisticsInfoList(number, company) : expressCompany.queryLogisticsInfoList(number);
-        Date latestTime = localLogistics.getLatestTime();
+        LogisticsVo vo = expressCompany instanceof IWebSite ? ((IWebSite) expressCompany).queryLogistics(number, company) : expressCompany.queryLogistics(number);
+        Logistics remoteLogistics = vo.getLogistics();
+        List<LogisticsInfo> orderedLogisticsInfoList = vo.getLogisticsInfoList();
         List<LogisticsInfo> insertList = new ArrayList<>(16);
-        LogisticsInfo latestLogisticsInfo = null;
-        Date maxDate = latestTime;
-        for (LogisticsInfo logisticsInfo : logisticsInfoList) {
-            Date time = logisticsInfo.getTime();
-            if (time.after(latestTime)) {
-                insertList.add(logisticsInfo);
-                if (time.after(maxDate)) {
-                    maxDate = time;
-                    latestLogisticsInfo = logisticsInfo;
+        if (remoteLogistics.getLatestTime().after(localLogistics.getLatestTime())) {
+            checkLatestLogistics(localLogistics, orderedLogisticsInfoList, insertList);
+            logisticsInfoStorage.insertBatch(insertList);
+            logisticsStorage.updateLogisticsStateInfo(remoteLogistics);
+        }
+        logisticsVo.setLogistics(localLogistics);
+        logisticsVo.setLogisticsInfoList(orderedLogisticsInfoList);
+        return logisticsVo;
+    }
+
+    /**
+     * 物流信息中需要添加到本地的物流信息列表
+     *
+     * @param localLogistics           本地物流信息
+     * @param orderedLogisticsInfoList 已拍好序的物流信息列表，{@link LogisticsInfo#getTime()}的降序
+     * @param insertList               需要添加的列表
+     */
+    private void checkLatestLogistics(Logistics localLogistics, List<LogisticsInfo> orderedLogisticsInfoList, List<LogisticsInfo> insertList) {
+        if (CollectionUtils.isNotEmpty(orderedLogisticsInfoList)) {
+            Date oldLatestTime = localLogistics.getLatestTime();
+            for (LogisticsInfo logisticsInfo : orderedLogisticsInfoList) {
+                if (logisticsInfo.getTime().after(oldLatestTime)) {
+                    insertList.add(logisticsInfo);
+                } else {
+                    break;
                 }
             }
         }
-        //比对是否最新信息已更新
-        if (!insertList.isEmpty()) {
-            logisticsInfoStorage.insertBatch(insertList);
-            localLogistics.setLatestTime(latestLogisticsInfo.getTime());
-            localLogistics.setLatestProgress(latestLogisticsInfo.getDesc());
-            logisticsStorage.update(number, latestLogisticsInfo.getTime(), latestLogisticsInfo.getDesc());
-        }
-        logisticsVo.setLogistics(localLogistics);
-        logisticsVo.setLogisticsInfoList(logisticsInfoList);
-        return logisticsVo;
     }
 }

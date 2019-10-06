@@ -34,8 +34,10 @@ public interface LogisticsMapper {
     /**
      * 更新物流的最新进展和时间
      * @param number 快递单号
-     * @param time 最新时间
-     * @param desc 最新进展描述
+     * @param state 物流状态
+     * @param latestTime 最新时间
+     * @param latestProgress 最新进展描述
      */
-    void update(@Param("number") String number, @Param("time") Date time, @Param("desc") String desc);
+    void updateLogisticsStateInfo(@Param("number") String number, @Param("latestTime") Date latestTime,
+                                  @Param("latestProgress") String latestProgress, @Param("state") int state);
 }

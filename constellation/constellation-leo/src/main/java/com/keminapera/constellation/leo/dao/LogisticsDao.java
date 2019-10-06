@@ -2,10 +2,7 @@ package com.keminapera.constellation.leo.dao;
 
 import com.keminapera.constellation.leo.mapper.LogisticsMapper;
 import com.keminapera.constellation.leo.pojo.Logistics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.Date;
 
 /**
  * 物流dao
@@ -15,8 +12,11 @@ import java.util.Date;
  */
 @Repository
 public class LogisticsDao {
-    @Autowired
     private LogisticsMapper logisticsMapper;
+
+    public LogisticsDao(LogisticsMapper logisticsMapper) {
+        this.logisticsMapper = logisticsMapper;
+    }
 
     /**
      * 添加物流
@@ -38,11 +38,10 @@ public class LogisticsDao {
 
     /**
      * 更新物流的最新进展和时间
-     * @param number 快递单号
-     * @param time 最新时间
-     * @param desc 最新进展
+     * @param logistics 物流实体
      */
-    public void update(String number, Date time, String desc) {
-        logisticsMapper.update(number, time, desc);
+    public void updateLogisticsStateInfo(Logistics logistics) {
+        logisticsMapper.updateLogisticsStateInfo(logistics.getNumber(), logistics.getLatestTime(),
+                logistics.getLatestProgress(), logistics.getState());
     }
 }

@@ -8,6 +8,7 @@ import com.keminapera.constellation.leo.pojo.Logistics;
 import com.keminapera.constellation.leo.pojo.LogisticsInfo;
 import com.keminapera.constellation.leo.service.manager.AbstractLogisticsInfoExtractor;
 import com.keminapera.constellation.leo.service.manager.ILogisticsInfoExtractor;
+import com.keminapera.constellation.leo.util.KeyGeneratorUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 /**
  * 从第三方返回结果中提取物流信息
@@ -30,35 +31,37 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
 
     @Override
     @NotNull
-    public List<LogisticsInfo> doExtractorLogisticsInfoList(@NotNull String receivedResult, boolean logisticsInfoExisted) {
-        String targetResult = logisticsInfoExisted ? getTargetString(receivedResult) : receivedResult;
+    public List<LogisticsInfo> doExtractorOrderedLogisticsInfoList(@NotNull String receivedResult, Map<String, Object> contextParam) {
+        JSONObject successData = getSuccessData(receivedResult);
         List<LogisticsInfo> logisticsInfoList = new ArrayList<>(16);
-        JSONObject jsonObject = JSON.parseObject(targetResult);
-        JSONArray jsonarray = jsonObject.getJSONArray(ParseProperties.DATA);
+        JSONArray jsonarray = successData.getJSONArray(ParseProperties.LOGISTICS_INFO);
         for(int i = 0; i < jsonarray.size(); i++) {
             LogisticsInfo logisticsInfo = new LogisticsInfo();
-            logisticsInfo.setId(UUID.randomUUID().toString());
-            JSONObject info = jsonarray.getJSONObject(i);
-            Date time = new Date(info.get(ParseProperties.DATA_TIME).toString());
-            logisticsInfo.setTime(time);
-            logisticsInfo.setDesc(info.get(ParseProperties.DATA_CONTEXT).toString());
-            logisticsInfo.setNumberLogistics(jsonObject.get(ParseProperties.NU).toString());
+            logisticsInfo.setId(KeyGeneratorUtil.genetateStringKey());
+            JSONObject infoJson = jsonarray.getJSONObject(i);
+            logisticsInfo.setTime(new Date(infoJson.getLongValue(ParseProperties.TIME) * 1000));
+            logisticsInfo.setDesc(infoJson.getString(ParseProperties.DESC));
+            logisticsInfo.setNumberLogistics(contextParam.get("number").toString());
             logisticsInfoList.add(logisticsInfo);
         }
         return logisticsInfoList;
     }
 
     @Override
-    public LogisticsVo doExtractorLogistics(@NotNull String receivedResult) {
-        String targetResult = getTargetString(receivedResult);
+    public LogisticsVo doExtractorLogistics(@NotNull String receivedResult, Map<String, Object> contextParam) {
+        JSONObject successData = getSuccessData(receivedResult);
         LogisticsVo logisticsVo = new LogisticsVo();
         Logistics logistics = new Logistics();
-        JSONObject jsonObject = JSON.parseObject(targetResult);
-        logistics.setNumber(jsonObject.get(ParseProperties.NU).toString());
-        logistics.setState(jsonObject.getInteger(ParseProperties.STATE));
-        logistics.setCompany(ExpressCompanyEnum.getNumber(jsonObject.get(ParseProperties.COM).toString()));
+        logistics.setNumber(contextParam.get("number").toString());
+        int originState = successData.getInteger(ParseProperties.STATE);
+        logistics.setState(Kuaidi100LogisticsStateConverter.getLocalLogisticsState(originState));
+        logistics.setCompany(ExpressCompanyEnum.getNumber(successData.get(ParseProperties.COM).toString()));
+        logistics.setSendTime(successData.getDate(ParseProperties.SEND_TIME));
+        List<LogisticsInfo> logisticsInfoList = doExtractorOrderedLogisticsInfoList(receivedResult, contextParam);
+        LogisticsInfo latestLogisticsInfo = logisticsInfoList.get(0);
+        logistics.setLatestTime(latestLogisticsInfo.getTime());
+        logistics.setLatestProgress(latestLogisticsInfo.getDesc());
         logisticsVo.setLogistics(logistics);
-        List<LogisticsInfo> logisticsInfoList = doExtractorLogisticsInfoList(targetResult, false);
         logisticsVo.setLogisticsInfoList(logisticsInfoList);
         return logisticsVo;
     }
@@ -66,7 +69,11 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
     @Override
     public JSONObject getSuccessData(String receivedResult) {
         String targetString = getTargetString(receivedResult);
-        return null;
+        JSONObject jsonObject = JSON.parseObject(targetString);
+        if (jsonObject.getIntValue(ParseProperties.STATUS) == 0) {
+            return jsonObject.getJSONObject(ParseProperties.DATA).getJSONObject(ParseProperties.INFO);
+        }
+        throw new RuntimeException("该单号暂无物流进展，请稍后再试，或检查公司和单号是否有误");
     }
 
     /**
@@ -80,34 +87,46 @@ public final class Kuaidi100LogisticsInfoLogisticsInfoExtractor extends Abstract
         return StringUtils.substring(decodeString, startPosition, decodeString.length() - 1);
     }
 
-    private static class ParseProperties{
-        /**
-         * 快递单号
-         */
-        private static final String NU = "nu";
-        /**
-         * 快递公司的英文简拼
-         */
-        private static final String COM = "com";
+    public static class ParseProperties {
         /**
          * 获取第三方数据的状态200：正常
          */
         private static final String STATUS = "status";
         /**
-         * 物流状态
-         */
-        private static final String STATE = "state";
-        /**
          * 存放物流信息的字段
          */
         private static final String DATA = "data";
         /**
-         * 每段物流信息的时间
+         * 存放物流信息和物流状态
          */
-        private static final String DATA_TIME = "time";
+        private static final String INFO = "info";
+        /**
+         * 快递公司的英文简拼
+         */
+        private static final String COM = "com";
+        /**
+         * 物流状态
+         */
+        private static final String STATE = "state";
+        /**
+         * 发货时间
+         */
+        private static final String SEND_TIME = "send_time";
+        /**
+         * 最新进展
+         */
+        private static final String LATEST_PROGRESS = "latest_progress";
         /**
          * 物流信息的描述
          */
-        private static final String DATA_CONTEXT = "context";
+        private static final String LOGISTICS_INFO = "context";
+        /**
+         * 每段物流信息的时间
+         */
+        private static final String TIME = "time";
+        /**
+         * 物流信息描述
+         */
+        private static final String DESC = "desc";
     }
 }

@@ -2,11 +2,13 @@ package com.keminapera.constellation.leo.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -27,6 +29,8 @@ import java.util.Map;
  */
 @Slf4j
 public final class HttpUtil {
+
+    private static CookieStore cookieStore = new BasicCookieStore();
     /**
      * 发送GET请求
      * @param url 请求的url
@@ -35,7 +39,7 @@ public final class HttpUtil {
      */
     public static String sendGet(String url, Map<String, String> param) {
         // 创建Httpclient对象
-        CloseableHttpClient httpclient = HttpClients.createDefault();
+        CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
 
         String resultString = "";
         CloseableHttpResponse response = null;
@@ -51,6 +55,11 @@ public final class HttpUtil {
             // 创建http GET请求
             HttpGet httpGet = new HttpGet(uri);
             log.error("请求的uri路径为{}", uri);
+           /* BasicClientCookie cookie = new BasicClientCookie("BAIDUID", "5D60DCBB8E914EE6505AB45F080189E5:FG=1");
+            cookie.setDomain(".baidu.com");
+            cookie.setPath("/");
+            cookie.setExpiryDate(new Date("Sun, 04 Oct 2020 12:34:17 GMT"));
+            cookieStore.addCookie(cookie);*/
             // 执行请求
             response = httpclient.execute(httpGet);
             // 判断返回状态是否为200

@@ -29,7 +29,11 @@ public enum CompanyEnum {
     /**
      * 天天快递
      */
-    TIANTIAN(5, "天天快递");
+    TIANTIAN(5, "天天快递"),
+    /**
+     * 顺丰快递
+     */
+    SHUNFENG(6, "顺丰快递");
     /**
      * 快递公司号（唯一）
      */
