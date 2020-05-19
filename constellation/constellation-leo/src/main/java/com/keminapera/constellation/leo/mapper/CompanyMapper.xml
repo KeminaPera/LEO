@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keminapera.constellation.leo.mapper.CompanyMapper">
+
+    <resultMap id="BaseResultMap" type="com.keminapera.constellation.leo.pojo.Company">
+        <result column="c_id" jdbcType="VARCHAR" property="id" />
+        <result column="c_fullname" jdbcType="VARCHAR" property="fullname" />
+        <result column="c_shortname" jdbcType="VARCHAR" property="shortname" />
+        <result column="c_com" jdbcType="VARCHAR" property="com" />
+        <result column="c_url" jdbcType="VARCHAR" property="url" />
+        <result column="n_valid" jdbcType="INTEGER" property="valid" />
+        <result column="n_number" jdbcType="INTEGER" property="number" />
+    </resultMap>
+
+    <update id="update" parameterType="com.keminapera.constellation.leo.pojo.Company" keyProperty="id">
+        update t_company set c_fullname = #{fullname}, c_shortname = #{shortname}, c_com = #{com},
+        c_url = #{url}, n_valid = #{valid}
+        where c_id = #{id}
+    </update>
+    <update id="updateValidById" parameterType="int" keyProperty="id">
+        update t_company set n_valid = #{valid} where c_id = #{id}
+    </update>
+    <select id="select" parameterType="java.lang.String" resultType="com.keminapera.constellation.leo.pojo.Company">
+        select * from t_company where c_id = #{id}
+    </select>
+    <select id="getAll" parameterType="int" resultMap="BaseResultMap">
+        select * from t_company where n_valid = #{valid}
+    </select>
+</mapper>
